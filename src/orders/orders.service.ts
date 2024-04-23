@@ -120,8 +120,17 @@ export class OrdersService extends PrismaClient implements OnModuleInit {
   }
 
   async findOne(id: string) {
-    const order = await this.order.findFirst({
+    const order: any = await this.order.findFirst({
       where: { id },
+      include: {
+        OrderDetail: {
+          select: {
+            price: true,
+            quantity: true,
+            productId: true,
+          },
+        },
+      },
     });
     if (!order) {
       throw new RpcException({
@@ -129,7 +138,20 @@ export class OrdersService extends PrismaClient implements OnModuleInit {
         status: HttpStatus.NOT_FOUND,
       });
     }
-    return order;
+    const productIds = order.OrderDetail.map((item) => item.productId);
+    const products: any[] = await firstValueFrom(
+      this.productsClient.send(
+        { cmd: PRODUCTS_SERVICES_NAMES.VALIDATE_PRODUCTS },
+        productIds,
+      ),
+    );
+    return {
+      ...order,
+      OrderDetail: order.OrderDetail.map((o) => ({
+        ...o,
+        name: products.find((p) => p.id === o.productId).name,
+      })),
+    };
   }
 
   async changeStatus(reqOrderStatus: ChangeOrderStatusDto) {
