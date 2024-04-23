@@ -1,25 +1,11 @@
-import {
-  IsBoolean,
-  IsEnum,
-  IsNumber,
-  IsOptional,
-  IsPositive,
-} from 'class-validator';
-import { OrderStatus } from '../entities/orderStatus.entity';
+import { Type } from 'class-transformer';
+import { ArrayMinSize, IsArray, ValidateNested } from 'class-validator';
+import { OrderItemDto } from './order-item.dto';
 
 export class CreateOrderDto {
-  @IsNumber()
-  @IsPositive()
-  totalAmount: number;
-  @IsNumber()
-  @IsPositive()
-  totalItems: number;
-  @IsEnum(OrderStatus, {
-    message: `The values for the order status are PENDING, DELIVERED, CANCELLED`,
-  })
-  @IsOptional()
-  status: OrderStatus = OrderStatus.PENDING;
-  @IsBoolean()
-  @IsOptional()
-  isPaid: boolean = false;
+  @IsArray()
+  @ArrayMinSize(1)
+  @ValidateNested({each: true})
+  @Type (() => OrderItemDto)
+  items: OrderItemDto[];
 }
