@@ -19,12 +19,12 @@ export class OrdersController {
   }
 
   @MessagePattern({ cmd: 'find_one_order' })
-  findOne(@Payload() id: number) {
+  findOne(@Payload() id: string) {
     return this.ordersService.findOne(id);
   }
 
   @MessagePattern({ cmd: 'change_order_status' })
-  changeOrderStatus(@Payload() id: number) {
+  changeOrderStatus(@Payload() id: string) {
     return this.ordersService.changeStatus(id);
   }
 }

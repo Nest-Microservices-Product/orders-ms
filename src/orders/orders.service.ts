@@ -1,7 +1,8 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { HttpStatus, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { PaginationDto } from 'src/shared/dto/pagination.dto';
 import { PrismaClient } from '@prisma/client';
+import { RpcException } from '@nestjs/microservices';
 
 @Injectable()
 export class OrdersService extends PrismaClient implements OnModuleInit {
@@ -11,18 +12,50 @@ export class OrdersService extends PrismaClient implements OnModuleInit {
     this.logger.log('Database connected');
   }
   create(createOrderDto: CreateOrderDto) {
-    return 'This action adds a new order';
+    return this.order.create({
+      data: createOrderDto,
+    });
   }
 
-  findAll(paginationDto: PaginationDto) {
-    return `This action returns all orders`;
+  async findAll(paginationDto: PaginationDto) {
+    const { page, limit } = paginationDto;
+    const skipResults = (page - 1) * limit;
+    const totalRows = await this.order.count();
+    const lastPage = Math.ceil(totalRows / limit);
+    const dataRes = await this.order.findMany({
+      skip: skipResults,
+      take: limit,
+    });
+    if (!dataRes.length) {
+      throw new RpcException({
+        message: 'No results found',
+        status: HttpStatus.NO_CONTENT,
+      });
+    }
+    return {
+      data: dataRes,
+      meta: {
+        totalRows: totalRows,
+        lastPage: lastPage,
+        actualPage: page,
+      },
+    };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} order`;
+  async findOne(id: string) {
+    const order = await this.order.findFirst({
+      where: { id },
+    });
+    if (!order) {
+      throw new RpcException({
+        message: `Could not find order with id ${id}`,
+        status: HttpStatus.NOT_FOUND,
+      });
+    }
+    return order;
   }
 
-  changeStatus(id: number) {
+  changeStatus(id: string) {
     return `This action returns a #${id} order with a different status`;
   }
 }
