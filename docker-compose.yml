@@ -11,5 +11,5 @@ services:
       - 5432:5432
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=superm@n0708
+      - POSTGRES_PASSWORD=1234567
       - POSTGRES_DB=ordersdb
