@@ -3,7 +3,10 @@ import { envSchema } from './validators/EnvVarSchema.validator';
 import { EnvVars } from './entities/EnvVars.entity';
 
 const getEnvVars = () => {
-  const { error, value } = envSchema.validate(process.env);
+  const { error, value } = envSchema.validate({
+    ...process.env,
+    NATS_SERVERS: process.env?.NATS_SERVERS.split(','),
+  });
 
   if (error) {
     throw new Error(
@@ -15,8 +18,7 @@ const getEnvVars = () => {
 
   return {
     port: envVars.PORT,
-    productsMsHost: envVars.PRODUCTS_MS_HOST,
-    productsMsPort: envVars.PRODUCTS_MS_PORT,
+    natsServer: envVars.NATS_SERVERS,
   };
 };
 
