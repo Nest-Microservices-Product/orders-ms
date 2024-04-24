@@ -21,8 +21,7 @@ import { NAST_SERVICE } from 'src/shared/constants/NATS_SERVICE';
         name: NAST_SERVICE,
         transport: Transport.NATS,
         options: {
-          host: envs.natsServer,
-          port: envs.natsServer,
+          servers: envs.natsServer,
         },
       },
     ]),
