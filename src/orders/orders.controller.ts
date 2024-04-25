@@ -13,8 +13,13 @@ export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
   @MessagePattern({ cmd: 'create_order' })
-  create(@Payload() createOrderDto: CreateOrderDto) {
-    return this.ordersService.create(createOrderDto);
+  async create(@Payload() createOrderDto: CreateOrderDto) {
+    const order = await this.ordersService.create(createOrderDto);
+    const paymentSession = await this.ordersService.createPaymentSession(order)
+    return {
+      order,
+      paymentSession
+    }
   }
 
   @MessagePattern({ cmd: 'find_all_orders' })
@@ -33,7 +38,6 @@ export class OrdersController {
   }
   @EventPattern('payment.successful')
   paidOrder(@Payload() paidOrderDto: PaidOrderDto) {
-    console.log('Entro al orden controller')
-    console.log(paidOrderDto);
+    return this.ordersService.paidOrder(paidOrderDto)
   }
 }
