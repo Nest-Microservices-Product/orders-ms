@@ -133,6 +133,11 @@ export class OrdersService extends PrismaClient implements OnModuleInit {
             productId: true,
           },
         },
+        OrderReceipt: {
+          select: {
+            receiptUrl: true,
+          },
+        },
       },
     });
     if (!order) {
