@@ -5,7 +5,7 @@ export class ChangeOrderStatusDto {
   @IsUUID()
   id: string;
   @IsEnum(OrderStatus, {
-    message: `The values for the order status are PENDING, DELIVERED, CANCELLED`,
+    message: `The values for the order status are PENDING, DELIVERED, CANCELLED, PAID`,
   })
   status: OrderStatus;
 }

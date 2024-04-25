@@ -1,7 +1,12 @@
 import { Controller } from '@nestjs/common';
-import { MessagePattern, Payload } from '@nestjs/microservices';
+import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
 import { OrdersService } from './orders.service';
-import { ChangeOrderStatusDto, CreateOrderDto, OrderPaginationDto } from './dto';
+import {
+  ChangeOrderStatusDto,
+  CreateOrderDto,
+  OrderPaginationDto,
+  PaidOrderDto
+} from './dto';
 
 @Controller()
 export class OrdersController {
@@ -25,5 +30,10 @@ export class OrdersController {
   @MessagePattern({ cmd: 'change_order_status' })
   changeOrderStatus(@Payload() reqOrderStatus: ChangeOrderStatusDto) {
     return this.ordersService.changeStatus(reqOrderStatus);
+  }
+  @EventPattern('payment.successful')
+  paidOrder(@Payload() paidOrderDto: PaidOrderDto) {
+    console.log('Entro al orden controller')
+    console.log(paidOrderDto);
   }
 }
