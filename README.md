@@ -1,8 +1,22 @@
 # Orders MS
 
-## Development pasos
+## Dev
 
-1. Clonar el proyecto
+1. Clone the repository
 2. Crear un archivo `.env` basado en el archivo `.env.template`
-3. Levantar la base de datos con `docker compose up -d`
-4. Levantar el proyecto con `npm run start:dev`
+3. Create a file `.env` based on `env.template`
+4. Run the command `npm run start:dev` to run the project
+
+## PROD
+
+Run the following command
+
+```
+docker build -f dockerfile.prod -t order-ms .
+```
+
+## If you want the latest version of the service
+
+```
+docker pull fernandoflores07081/orders-ms-prod
+```
