@@ -5,7 +5,7 @@ import {
   ChangeOrderStatusDto,
   CreateOrderDto,
   OrderPaginationDto,
-  PaidOrderDto
+  PaidOrderDto,
 } from './dto';
 
 @Controller()
@@ -15,11 +15,11 @@ export class OrdersController {
   @MessagePattern({ cmd: 'create_order' })
   async create(@Payload() createOrderDto: CreateOrderDto) {
     const order = await this.ordersService.create(createOrderDto);
-    const paymentSession = await this.ordersService.createPaymentSession(order)
+    const paymentSession = await this.ordersService.createPaymentSession(order);
     return {
       order,
-      paymentSession
-    }
+      paymentSession,
+    };
   }
 
   @MessagePattern({ cmd: 'find_all_orders' })
@@ -32,12 +32,17 @@ export class OrdersController {
     return this.ordersService.findOne(id);
   }
 
+  @MessagePattern({ cmd: 'find_all_orders_by_user' })
+  findAllByUserId(@Payload() userId: string) {
+    return this.ordersService.findAllByUserId(userId);
+  }
+
   @MessagePattern({ cmd: 'change_order_status' })
   changeOrderStatus(@Payload() reqOrderStatus: ChangeOrderStatusDto) {
     return this.ordersService.changeStatus(reqOrderStatus);
   }
   @EventPattern('payment.successful')
   paidOrder(@Payload() paidOrderDto: PaidOrderDto) {
-    return this.ordersService.paidOrder(paidOrderDto)
+    return this.ordersService.paidOrder(paidOrderDto);
   }
 }

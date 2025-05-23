@@ -123,6 +123,35 @@ export class OrdersService extends PrismaClient implements OnModuleInit {
     };
   }
 
+  async findAllByUserId(userId: string) {
+    const orders = await this.order.findMany({
+      where: {
+        userId,
+      },
+      include: {
+        OrderDetail: {
+          select: {
+            price: true,
+            quantity: true,
+            productId: true,
+          },
+        },
+        OrderReceipt: {
+          select: {
+            receiptUrl: true,
+          },
+        },
+      },
+    });
+    if (!orders.length) {
+      throw new RpcException({
+        message: 'No results found',
+        status: HttpStatus.NO_CONTENT,
+      });
+    }
+    return orders;
+  }
+
   async findOne(id: string) {
     const order: any = await this.order.findFirst({
       where: { id },
