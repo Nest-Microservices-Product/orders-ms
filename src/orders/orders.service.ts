@@ -51,6 +51,7 @@ export class OrdersService extends PrismaClient implements OnModuleInit {
       // create a transaction
       const newOrder = await this.order.create({
         data: {
+          userId: createOrderDto.userId,
           totalAmount: totalAmount,
           totalItems: totalItems,
           OrderDetail: {
