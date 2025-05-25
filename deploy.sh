@@ -24,6 +24,7 @@ ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no "$EC2_USER@$EC2_IP" "
     git pull
   fi
   npm ci
+  npm run docker:start
   npm run build
   echo \"NODE_ENV=$NODE_ENV\" > .env
   echo \"PORT=3001\" >> .env
