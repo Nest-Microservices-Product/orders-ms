@@ -23,6 +23,6 @@ async function bootstrap() {
   //   }),
   // );
   await app.listen();
-  logger.log(`Orders microservice running`);
+  logger.log(`Orders microservice running prod`);
 }
 bootstrap();
