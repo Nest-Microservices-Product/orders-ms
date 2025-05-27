@@ -8,8 +8,8 @@ pipeline {
         SSH_CRED_ID_DIEGO = 'ssh-key-ec2-diego'
         EC2_USER = 'ubuntu'
         REMOTE_PATH = '/home/ubuntu/orders-ms'
-        K8S_REMOTE_PATH = '/home/ubuntu/nest-microservices/k8s/store-ms/templates/order-ms/'
-        IMAGE_NAME = 'fernandoflores07081/order-ms-prod'
+        K8S_REMOTE_PATH = '/home/ubuntu/nest-microservices/k8s/store-ms/templates/orders-ms/'
+        IMAGE_NAME = 'fernandoflores07081/orders-ms-prod'
     }
 
     stages {
@@ -99,10 +99,10 @@ pipeline {
                     def k8sConfigFile = "${K8S_REMOTE_PATH}deployment.yml"
                     sh "kubectl apply -f ${k8sConfigFile} --namespace=default"
                     
-                    sh "kubectl set image deployment/order-ms order-ms-prod=${IMAGE_NAME}:${env.DOCKER_TAG} --namespace=default"
+                    sh "kubectl set image deployment/orders-ms orders-ms-prod=${IMAGE_NAME}:${env.DOCKER_TAG} --namespace=default"
 
                     // Verificar que el despliegue se complete exitosamente
-                    sh "kubectl rollout status  deployment/order-ms --namespace=default"
+                    sh "kubectl rollout status  deployment/orders-ms --namespace=default"
                 }
             }
         }
