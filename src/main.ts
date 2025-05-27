@@ -15,13 +15,6 @@ async function bootstrap() {
       },
     },
   );
-  //config for validations
-  // app.useGlobalPipes(
-  //   new ValidationPipe({
-  //     whitelist: true,
-  //     forbidNonWhitelisted: true,
-  //   }),
-  // );
   await app.listen();
   logger.log(`Orders microservice running prod`);
 }
