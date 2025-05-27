@@ -69,7 +69,6 @@ pipeline {
                     withCredentials([
                         string(credentialsId: 'db-orders-url-prod', variable: 'DATABASE_URL')
                     ]) {
-                        echo "Construyendo imagen Docker para producción con URL de base de datos: ${DATABASE_URL}"
                         sh """
                         docker build --build-arg ORDERS_DATABASE_URL=${DATABASE_URL} -f dockerfile.prod -t ${IMAGE_NAME}:${env.DOCKER_TAG} -t ${IMAGE_NAME}:latest .
                         """
